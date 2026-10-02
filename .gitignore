@@ -1,9 +1,13 @@
-
 @"
-__pycache__/
-*.pyc
-.env
+*.db
+*.sqlite
+*.sqlite3
+instance/
 venv/
 env/
-instance/
-"@ | Set-Content .gitignore
+.venv/
+.env
+__pycache__/
+*.pyc
+.vscode/
+"@ | Set-Content -Path ".gitignore" -Encoding UTF8
