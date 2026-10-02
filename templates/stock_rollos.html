@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>CU-03: Stock en Playón</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 30px; background-color: #f8f9fa;">
+    <div style="max-width: 1100px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        
+        <header style="border-bottom: 2px solid #2c3e50; padding-bottom: 12px; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="color: #2c3e50; margin: 0;">CU-03: Inventario de Rollos en Playón</h2>
+                <a href="/" style="background: #e2e8f0; color: #2c3e50; padding: 6px 14px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 13px;">← Volver al Inicio</a>
+            </div>
+            <nav style="margin-top: 10px;">
+                <a href="/ingreso-rollos" style="color: #27ae60; text-decoration: none; font-weight: bold; margin-right: 15px;">+ Ingresar Nuevo Lote</a>
+                <a href="/ordenes-corte" style="color: #3498db; text-decoration: none; margin-right: 15px;">Órdenes de Aserrado</a>
+                <a href="/proveedores" style="color: #3498db; text-decoration: none;">Proveedores</a>
+            </nav>
+        </header>
+
+        {% with mensajes = get_flashed_messages(with_categories=true) %}
+            {% if mensajes %}
+                    {% if categoria == 'error' %}
+                        <div style="padding: 10px; margin-bottom: 15px; border-radius: 4px; background-color: #f8d7da; color: #721c24;">
+                            <strong>{{ mensaje }}</strong>
+                        </div>
+                    {% else %}
+                        <div style="padding: 10px; margin-bottom: 15px; border-radius: 4px; background-color: #d4edda; color: #155724;">
+                            <strong>{{ mensaje }}</strong>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <table border="1" cellpadding="9" cellspacing="0" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+            <thead>
+                <tr style="background-color: #2c3e50; color: white;">
+                    <th>Lote #</th>
+                    <th>Proveedor</th>
+                    <th>Especie</th>
+                    <th>Rollos</th>
+                    <th>Diám. Prom.</th>
+                    <th>Largo Prom.</th>
+                    <th>Volumen Total</th>
+                    <th>Fecha Ingreso</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in rollos %}
+                <tr>
+                    <td><strong>#{{ r['id_lote'] }}</strong></td>
+                    <td>{{ r['proveedor'] }}</td>
+                    <td>{{ r['especie'] }}</td>
+                    <td>{{ r['cantidad_rollos'] }}</td>
+                    <td>{{ r['diametro_promedio_cm'] }} cm</td>
+                    <td>{{ r['largo_promedio_m'] }} m</td>
+                    <td><strong>{{ r['volumen_total_m3'] }} m³</strong></td>
+                    <td>{{ r['fecha_ingreso'] }}</td>
+                    <td>
+                        <form action="{{ url_for('enviar_a_corte', id_lote=r['id_lote']) }}" method="POST" style="margin: 0;">
+                            <button type="submit" style="background-color: #e67e22; color: white; border: none; padding: 6px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 13px;">
+                                Mover a Sierra →
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="9" style="text-align: center; color: #7f8c8d; padding: 25px;">
+                        No hay lotes disponibles en playón en este momento.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Orden de Corte - Administración</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 30px; background-color: #f8f9fa;">
+    <div style="max-width: 700px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        
+        <header style="border-bottom: 2px solid #2c3e50; padding-bottom: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+            <h2 style="color: #2c3e50; margin: 0;">Planificar Corte para Sierra</h2>
+            <a href="/" style="background: #e2e8f0; color: #2c3e50; padding: 6px 14px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 13px;">← Volver</a>
+        </header>
+
+        {% with mensajes = get_flashed_messages(with_categories=true) %}
+            {% if mensajes %}
+                {% for categoria, mensaje in mensajes %}
+                    {% if categoria == 'error' %}
+                        <div style="padding: 10px; margin-bottom: 15px; border-radius: 4px; background-color: #f8d7da; color: #721c24;">
+                            <strong>{{ mensaje }}</strong>
+                        </div>
+                    {% else %}
+                        <div style="padding: 10px; margin-bottom: 15px; border-radius: 4px; background-color: #d4edda; color: #155724;">
+                            <strong>{{ mensaje }}</strong>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('crear_orden_corte') }}" method="POST" style="display: flex; flex-direction: column; gap: 15px;">
+            <div>
+                <label for="id_lote" style="font-weight: bold; display: block; margin-bottom: 5px;">Seleccionar Lote en Playón:</label>
+                <select name="id_lote" id="id_lote" required style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ccc;">
+                    <option value="" disabled selected>-- Elija un lote de madera --</option>
+                    {% for l in lotes %}
+                        <option value="{{ l['id_lote'] }}">
+                            Lote #{{ l['id_lote'] }} - {{ l['especie'] }} ({{ l['cantidad_rollos'] }} rollos, {{ l['volumen_total_m3'] }} m³) - Prov: {{ l['proveedor'] }}
+                        </option>
+                    {% else %}
+                        <option value="" disabled>No hay lotes en playón actualmente</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label for="id_producto_solicitado" style="font-weight: bold; display: block; margin-bottom: 5px;">Producto Objetivo a Producir:</label>
+                <select name="id_producto_solicitado" id="id_producto_solicitado" required style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ccc;">
+                    <option value="" disabled selected>-- Tipo de pieza / producto --</option>
+                    {% for p in productos %}
+                        <option value="{{ p['id_producto'] }}">{{ p['nombre'] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label for="indicaciones" style="font-weight: bold; display: block; margin-bottom: 5px;">Instrucciones específicas para el Operario de Sierra:</label>
+                <textarea name="indicaciones" id="indicaciones" rows="3" placeholder="Ej: Sacar tablas de 1x6 de primera calidad; descartar costaneros con rajaduras." style="width: 100%; padding: 10px; box-sizing: border-box; border-radius: 4px; border: 1px solid #ccc;"></textarea>
+            </div>
+
+            <button type="submit" style="background-color: #e67e22; color: white; border: none; padding: 12px; border-radius: 4px; font-size: 15px; font-weight: bold; cursor: pointer;">
+                Enviar Orden a la Sierra →
+            </button>
+        </form>
+    </div>
+</body>
+</html>

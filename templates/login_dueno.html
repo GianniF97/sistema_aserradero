@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Acceso Administrador - Aserradero</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f4f6f9; display: flex; justify-content: center; align-items: center; min-height: 80vh; margin: 0;">
+    <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); width: 100%; max-width: 380px;">
+        <h3 style="color: #2c3e50; margin-top: 0; text-align: center;">Acceso de Administración</h3>
+        <p style="color: #7f8c8d; font-size: 13px; text-align: center; margin-bottom: 20px;">Ingresá la contraseña para gestionar proveedores y catálogos.</p>
+
+        {% with mensajes = get_flashed_messages(with_categories=true) %}
+            {% if mensajes %}
+                {% for categoria, mensaje in mensajes %}
+                    {% if categoria == 'error' %}
+                        <div style="padding: 10px; margin-bottom: 15px; border-radius: 4px; font-size: 13px; background-color: #f8d7da; color: #721c24;">
+                            {{ mensaje }}
+                        </div>
+                    {% else %}
+                        <div style="padding: 10px; margin-bottom: 15px; border-radius: 4px; font-size: 13px; background-color: #d4edda; color: #155724;">
+                            {{ mensaje }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('login_dueno') }}" method="POST" style="display: flex; flex-direction: column; gap: 14px;">
+            <div>
+                <label for="password" style="font-weight: bold; font-size: 13px; display: block; margin-bottom: 5px;">Contraseña:</label>
+                <input type="password" id="password" name="password" required autofocus placeholder="••••••••" style="width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+            </div>
+
+            <button type="submit" style="background-color: #2c3e50; color: white; border: none; padding: 11px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 14px; margin-top: 5px;">
+                Ingresar como Dueño
+            </button>
+            <a href="/" style="text-align: center; color: #7f8c8d; text-decoration: none; font-size: 13px; margin-top: 5px;">Volver al Panel Operativo</a>
+        </form>
+    </div>
+</body>
+</html>

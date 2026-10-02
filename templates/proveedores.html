@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Proveedores - Aserradero</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 30px; background-color: #f8f9fa;">
+    <div style="max-width: 1100px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        
+        <header style="border-bottom: 2px solid #2c3e50; padding-bottom: 12px; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="color: #2c3e50; margin: 0;">Panel de Administración: Proveedores de Rollos</h2>
+                <a href="/" style="background: #e2e8f0; color: #2c3e50; padding: 6px 14px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 13px;">← Volver al Inicio</a>
+            </div>
+            <nav style="margin-top: 10px;">
+                <a href="/stock-rollos" style="color: #3498db; text-decoration: none; margin-right: 15px;">Stock en Playón</a>
+                <a href="/ingreso-rollos" style="color: #3498db; text-decoration: none; margin-right: 15px;">Ingreso de Rollos</a>
+                <a href="/ordenes-corte" style="color: #3498db; text-decoration: none;">Órdenes de Aserrado</a>
+            </nav>
+        </header>
+
+        {% with mensajes = get_flashed_messages(with_categories=true) %}
+            {% if mensajes %}
+                {% for categoria, mensaje in mensajes %}
+                    {% if categoria == 'error' %}
+                        <div style="padding: 10px; margin-bottom: 15px; border-radius: 4px; background-color: #f8d7da; color: #721c24;">
+                            <strong>{{ mensaje }}</strong>
+                        </div>
+                    {% else %}
+                        <div style="padding: 10px; margin-bottom: 15px; border-radius: 4px; background-color: #d4edda; color: #155724;">
+                            <strong>{{ mensaje }}</strong>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div style="display: grid; grid-template-columns: 320px 1fr; gap: 30px; align-items: start;">
+            <div style="background: #fdfdfd; padding: 18px; border: 1px solid #e2e8f0; border-radius: 6px;">
+                <h3 style="margin-top: 0; color: #2c3e50;">Nuevo Proveedor</h3>
+                <form action="{{ url_for('gestionar_proveedores') }}" method="POST" style="display: flex; flex-direction: column; gap: 12px;">
+                    <div>
+                        <label for="nombre" style="font-weight: bold; font-size: 13px; display: block; margin-bottom: 4px;">Razón Social / Nombre *</label>
+                        <input type="text" id="nombre" name="nombre" placeholder="Ej: Forestal Guaraní SRL" required style="width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;">
+                    </div>
+
+                    <div>
+                        <label for="cuit_dni" style="font-weight: bold; font-size: 13px; display: block; margin-bottom: 4px;">CUIT / DNI</label>
+                        <input type="text" id="cuit_dni" name="cuit_dni" placeholder="Ej: 30-12345678-9" style="width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;">
+                    </div>
+
+                    <div>
+                        <label for="telefono" style="font-weight: bold; font-size: 13px; display: block; margin-bottom: 4px;">Teléfono de Contacto</label>
+                        <input type="text" id="telefono" name="telefono" placeholder="Ej: 3755-456789" style="width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;">
+                    </div>
+
+                    <div>
+                        <label for="direccion" style="font-weight: bold; font-size: 13px; display: block; margin-bottom: 4px;">Localidad / Dirección</label>
+                        <input type="text" id="direccion" name="direccion" placeholder="Ej: Ruta 14 Km 885, Oberá" style="width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;">
+                    </div>
+
+                    <button type="submit" style="background-color: #27ae60; color: white; border: none; padding: 10px; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 5px;">
+                        + Registrar Proveedor
+                    </button>
+                </form>
+            </div>
+
+            <div>
+                <h3 style="margin-top: 0; color: #2c3e50;">Proveedores Registrados</h3>
+                <table border="1" cellpadding="8" cellspacing="0" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+                    <thead>
+                        <tr style="background-color: #2c3e50; color: white;">
+                            <th>ID</th>
+                            <th>Nombre / Empresa</th>
+                            <th>CUIT / DNI</th>
+                            <th>Teléfono</th>
+                            <th>Ubicación</th>
+                            <th style="text-align: center;">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in proveedores %}
+                        <tr>
+                            <td>{{ p['id_proveedor'] }}</td>
+                            <td><strong>{{ p['nombre'] }}</strong></td>
+                            <td>{{ p['cuit_dni'] or '-' }}</td>
+                            <td>{{ p['telefono'] or '-' }}</td>
+                            <td>{{ p['direccion'] or '-' }}</td>
+                            <td style="text-align: center;">
+                                <form action="{{ url_for('eliminar_proveedor', id_proveedor=p.id_proveedor) }}" method="POST" onsubmit="return confirm('¿Seguro que deseas eliminar al proveedor {{ p.nombre }}?');" style="margin: 0;">
+                                    <button type="submit" style="background-color: #c0392b; color: white; border: none; padding: 5px 10px; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer;">
+                                        Eliminar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: #7f8c8d;">No hay proveedores registrados aún.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

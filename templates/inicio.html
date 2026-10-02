@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel Principal - Sistema de Aserradero</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 30px; background-color: #f4f6f9;">
+    <div style="max-width: 1000px; margin: 0 auto;">
+        
+        <!-- Barra de Estado / Login -->
+        <div style="display: flex; justify-content: space-between; align-items: center; background: #2c3e50; color: white; padding: 12px 20px; border-radius: 8px 8px 0 0;">
+            <div>
+                Usuario actual: 
+                {% if es_dueno %}
+                    <strong style="color: #2ecc71;">DUEÑO / ADMINISTRADOR</strong>
+                {% else %}
+                    <strong style="color: #f1c40f;">OPERARIO DE PLANTA</strong>
+                {% endif %}
+            </div>
+            <div>
+                {% if es_dueno %}
+                    <a href="/logout-dueno" style="color: #ecf0f1; background: #c0392b; padding: 6px 14px; border-radius: 4px; text-decoration: none; font-size: 12px; font-weight: bold;">Cerrar Sesión Dueño</a>
+                {% else %}
+                    <a href="/login-dueno" style="color: white; background: #27ae60; padding: 6px 14px; border-radius: 4px; text-decoration: none; font-size: 12px; font-weight: bold;"> Acceso Dueño</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <header style="background: white; padding: 20px; border-radius: 0 0 8px 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); margin-bottom: 25px;">
+            <h1 style="color: #2c3e50; margin: 0 0 8px 0;">Sistema de Gestión de Aserradero</h1>
+            <p style="color: #7f8c8d; margin: 0;">
+                {% if es_dueno %}
+                    Panel de control gerencial: Supervisión de planta, compras y catálogos.
+                {% else %}
+                    Panel de planta: Recepción, movimiento y corte de madera.
+                {% endif %}
+            </p>
+        </header>
+
+        {% with mensajes = get_flashed_messages(with_categories=true) %}
+            {% if mensajes %}
+                {% for categoria, mensaje in mensajes %}
+                    {% if categoria == 'error' %}
+                        <div style="padding: 10px; margin-bottom: 20px; border-radius: 4px; background-color: #f8d7da; color: #721c24;">
+                            <strong>{{ mensaje }}</strong>
+                        </div>
+                    {% else %}
+                        <div style="padding: 10px; margin-bottom: 20px; border-radius: 4px; background-color: #d4edda; color: #155724;">
+                            <strong>{{ mensaje }}</strong>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+       <!-- Módulos de Administración (SOLO DUEÑO) -->
+            {% if es_dueno %}
+            <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
+                <h3 style="color: #2c3e50; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-top: 0;">Administración del Negocio</h3>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px;">
+                    <li>
+                        <a href="/crear-orden-corte" style="color: #2c3e50; text-decoration: none; font-weight: bold; display: block; padding: 12px; background: #fff8e1; border-radius: 4px; border-left: 4px solid #e67e22;">
+                            Planificar Corte para Sierra 
+                            <div style="font-size: 12px; font-weight: normal; color: #7f8c8d; margin-top: 2px;">Elegir lote en playón y ordenar producto a los operarios.</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/remitos" style="color: #2c3e50; text-decoration: none; font-weight: bold; display: block; padding: 12px; background: #f8f9fa; border-radius: 4px; border-left: 4px solid #27ae60;">
+                            Remitos Internos de Salida 
+                            <div style="font-size: 12px; font-weight: normal; color: #7f8c8d; margin-top: 2px;">Comprobantes de entrega, chofer y descuento de stock.</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/clientes" style="color: #2c3e50; text-decoration: none; font-weight: bold; display: block; padding: 12px; background: #f8f9fa; border-radius: 4px; border-left: 4px solid #16a085;">
+                            Cartera de Clientes 
+                            <div style="font-size: 12px; font-weight: normal; color: #7f8c8d; margin-top: 2px;">Empresas compradoras y contactos comerciales.</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/proveedores" style="color: #2c3e50; text-decoration: none; font-weight: bold; display: block; padding: 12px; background: #f8f9fa; border-radius: 4px; border-left: 4px solid #2980b9;">
+                            Gestión de Proveedores 
+                            <div style="font-size: 12px; font-weight: normal; color: #7f8c8d; margin-top: 2px;">Altas y consultas de proveedores forestales.</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/productos" style="color: #2c3e50; text-decoration: none; font-weight: bold; display: block; padding: 12px; background: #f8f9fa; border-radius: 4px; border-left: 4px solid #8e44ad;">
+                            Catálogo de Productos Terminados 
+                            <div style="font-size: 12px; font-weight: normal; color: #7f8c8d; margin-top: 2px;">Piezas comerciales (tablas, tirantes, listones) y stock.</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            {% endif %}
+
+        <!-- Accesos a Módulos -->
+        {% if es_dueno %}
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        {% else %}
+        <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+        {% endif %}
+            
+            <!-- Módulos de Operación de Planta -->
+            <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
+                <h3 style="color: #2c3e50; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-top: 0;">Operaciones de Planta</h3>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px;">
+                    <li>
+                        <a href="/ingreso-rollos" style="color: #2c3e50; text-decoration: none; font-weight: bold; display: block; padding: 12px; background: #f8f9fa; border-radius: 4px; border-left: 4px solid #27ae60;">
+                            CU-01: Ingreso de Rollos (Playón) 
+                            <div style="font-size: 12px; font-weight: normal; color: #7f8c8d; margin-top: 2px;">Descarga de camiones y cubicación de rollos en m³.</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/stock-rollos" style="color: #2c3e50; text-decoration: none; font-weight: bold; display: block; padding: 12px; background: #f8f9fa; border-radius: 4px; border-left: 4px solid #27ae60;">
+                            CU-03: Stock en Playón 
+                            <div style="font-size: 12px; font-weight: normal; color: #7f8c8d; margin-top: 2px;">Visualización de rollos y pase a banco de sierra.</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/ordenes-corte" style="color: #2c3e50; text-decoration: none; font-weight: bold; display: block; padding: 12px; background: #f8f9fa; border-radius: 4px; border-left: 4px solid #e67e22;">
+                            CU-02: Banco de Aserrado (Sierra) 
+                            <div style="font-size: 12px; font-weight: normal; color: #7f8c8d; margin-top: 2px;">Corte de madera, cálculo de merma y producción final.</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Módulos de Administración (SOLO DUEÑO) -->
+            {% if es_dueno %}
+            <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);">
+                <h3 style="color: #2c3e50; border-bottom: 2px solid #ecf0f1; padding-bottom: 10px; margin-top: 0;">Administración del Negocio</h3>
+                <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px;">
+                    <li>
+                        <a href="/proveedores" style="color: #2c3e50; text-decoration: none; font-weight: bold; display: block; padding: 12px; background: #f8f9fa; border-radius: 4px; border-left: 4px solid #2980b9;">
+                            Gestión de Proveedores 
+                            <div style="font-size: 12px; font-weight: normal; color: #7f8c8d; margin-top: 2px;">Altas de proveedores, CUIT y teléfonos de contacto.</div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/productos" style="color: #2c3e50; text-decoration: none; font-weight: bold; display: block; padding: 12px; background: #f8f9fa; border-radius: 4px; border-left: 4px solid #8e44ad;">
+                            Catálogo de Productos Terminados
+                            <div style="font-size: 12px; font-weight: normal; color: #7f8c8d; margin-top: 2px;">Piezas comerciales (tablas, tirantes, listones) y stock.</div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</body>
+</html>

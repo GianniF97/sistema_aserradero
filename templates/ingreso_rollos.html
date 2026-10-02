@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>CU-01: Ingreso de Rollos</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 30px; background-color: #f8f9fa;">
+    <div style="max-width: 650px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        
+        <header style="border-bottom: 2px solid #2c3e50; padding-bottom: 12px; margin-bottom: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="color: #2c3e50; margin: 0;">CU-01: Ingreso de Rollos (Playón)</h2>
+                <a href="/" style="background: #e2e8f0; color: #2c3e50; padding: 6px 14px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 13px;">← Volver al Inicio</a>
+            </div>
+            <nav style="margin-top: 10px;">
+                <a href="/stock-rollos" style="color: #3498db; text-decoration: none; margin-right: 15px;">Stock en Playón</a>
+                <a href="/ordenes-corte" style="color: #3498db; text-decoration: none;">Órdenes de Aserrado</a>
+            </nav>
+        </header>
+
+        {% with mensajes = get_flashed_messages(with_categories=true) %}
+            {% if mensajes %}
+                {% for categoria, mensaje in mensajes %}
+                    <div style="padding: 10px; margin-bottom: 15px; border-radius: 4px; background-color: #d4edda; color: #155724;">
+                        <strong>{{ mensaje }}</strong>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('ingresar_rollos') }}" method="POST" style="display: flex; flex-direction: column; gap: 14px;">
+            <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <label for="id_proveedor" style="font-weight: bold;">Proveedor:</label>
+                    <a href="/proveedores" style="font-size: 13px; color: #2980b9; text-decoration: none;">+ Gestionar Proveedores</a>
+                </div>
+                <select name="id_proveedor" id="id_proveedor" required style="width: 100%; padding: 9px; border: 1px solid #ccc; border-radius: 4px;">
+                    <option value="" disabled selected>-- Seleccionar Proveedor --</option>
+                    {% for p in proveedores %}
+                        <option value="{{ p['id_proveedor'] }}">{{ p['nombre'] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div>
+                <label for="especie" style="font-weight: bold; display: block; margin-bottom: 4px;">Especie:</label>
+                <select name="especie" id="especie" required style="width: 100%; padding: 9px; border: 1px solid #ccc; border-radius: 4px;">
+                    <option value="Pino Taeda">Pino Taeda</option>
+                    <option value="Pino Elliottis">Pino Elliottis</option>
+                    <option value="Eucalipto Grandis">Eucalipto Grandis</option>
+                    <option value="Araucaria">Araucaria</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="cantidad_rollos" style="font-weight: bold; display: block; margin-bottom: 4px;">Cantidad de Rollos:</label>
+                <input type="number" name="cantidad_rollos" id="cantidad_rollos" min="1" step="1" required style="width: 100%; padding: 9px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;" placeholder="Ej: 50">
+            </div>
+
+            <div>
+                <label for="diametro" style="font-weight: bold; display: block; margin-bottom: 4px;">Diámetro Promedio (cm):</label>
+                <input type="number" name="diametro" id="diametro" min="1" step="0.1" required style="width: 100%; padding: 9px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;" placeholder="Ej: 28.5">
+            </div>
+
+            <div>
+                <label for="largo" style="font-weight: bold; display: block; margin-bottom: 4px;">Largo Promedio (metros):</label>
+                <input type="number" name="largo" id="largo" min="0.1" step="0.05" required style="width: 100%; padding: 9px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;" placeholder="Ej: 3.5">
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <button type="submit" style="background-color: #2c3e50; color: white; border: none; padding: 11px 20px; border-radius: 4px; font-size: 15px; font-weight: bold; cursor: pointer; flex: 1;">
+                    Guardar Ingreso de Lote
+                </button>
+                <a href="/" style="background-color: #7f8c8d; color: white; border: none; padding: 11px 20px; border-radius: 4px; font-size: 15px; text-decoration: none; font-weight: bold; text-align: center;">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

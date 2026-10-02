@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Remito {{ remito['numero_remito'] }}</title>
+    <style>
+        @media print {
+            .no-print { display: none !important; }
+            body { margin: 0; padding: 0; background: white; }
+            .remito-box { border: none !important; box-shadow: none !important; }
+        }
+    </style>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 30px; background-color: #f4f6f9;">
+
+    <div class="no-print" style="max-width: 800px; margin: 0 auto 15px auto; display: flex; justify-content: space-between;">
+        <a href="/remitos" style="background: #7f8c8d; color: white; padding: 8px 15px; border-radius: 4px; text-decoration: none; font-weight: bold;">← Volver al Listado</a>
+        <button onclick="window.print();" style="background: #2980b9; color: white; border: none; padding: 8px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 14px;">
+            Imprimir Remito 🖨️
+        </button>
+    </div>
+
+    <div class="remito-box" style="max-width: 800px; margin: 0 auto; background: white; padding: 35px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid #ccc;">
+        
+        <!-- Encabezado Remito -->
+        <div style="display: flex; justify-content: space-between; border-bottom: 2px solid #2c3e50; padding-bottom: 15px;">
+            <div>
+                <h2 style="margin: 0; color: #2c3e50;">ASERRADERO</h2>
+                <div style="font-size: 13px; color: #555;">Producción y Venta de Maderas Aserradas</div>
+                <div style="font-size: 12px; color: #777;">Documento de Traslado Interno / Entrega</div>
+            </div>
+            <div style="text-align: right;">
+                <h3 style="margin: 0; color: #c0392b;">REMITO INTERNO</h3>
+                <div style="font-size: 16px; font-weight: bold; margin-top: 4px;">{{ remito['numero_remito'] }}</div>
+                <div style="font-size: 13px; color: #555; margin-top: 2px;">Fecha: {{ remito['fecha'] }}</div>
+            </div>
+        </div>
+
+        <!-- Datos Cliente y Transporte -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; background: #fafafa; padding: 15px; border-radius: 4px;">
+            <div>
+                <div style="font-weight: bold; color: #2c3e50; border-bottom: 1px solid #ddd; margin-bottom: 6px;">DATOS DEL CLIENTE</div>
+                <div style="font-size: 14px;"><strong>Razón Social:</strong> {{ remito['cliente_nombre'] }}</div>
+                <div style="font-size: 14px;"><strong>CUIT/DNI:</strong> {{ remito['cuit_dni'] or '-' }}</div>
+                <div style="font-size: 14px;"><strong>Dirección:</strong> {{ remito['direccion'] or '-' }}</div>
+            </div>
+            <div>
+                <div style="font-weight: bold; color: #2c3e50; border-bottom: 1px solid #ddd; margin-bottom: 6px;">DATOS DEL TRANSPORTE</div>
+                <div style="font-size: 14px;"><strong>Chofer:</strong> {{ remito['chofer_transporte'] or 'Retira en planta' }}</div>
+                <div style="font-size: 14px;"><strong>Vehículo / Patente:</strong> {{ remito['patente_vehiculo'] or '-' }}</div>
+            </div>
+        </div>
+
+        <!-- Detalle de Carga -->
+        <table border="1" cellpadding="8" cellspacing="0" style="width: 100%; border-collapse: collapse; margin: 25px 0; font-size: 14px;">
+            <thead>
+                <tr style="background: #2c3e50; color: white;">
+                    <th style="width: 60px; text-align: center;">Item</th>
+                    <th>Descripción de la Madera</th>
+                    <th style="width: 120px; text-align: right;">Cantidad (Piezas)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td style="text-align: center;">{{ loop.index }}</td>
+                    <td><strong>{{ item['producto_nombre'] }}</strong></td>
+                    <td style="text-align: right;"><strong>{{ item['cantidad'] }}</strong></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Firmas de Conformidad -->
+        <div style="display: flex; justify-content: space-between; margin-top: 60px; padding: 0 40px;">
+            <div style="text-align: center; border-top: 1px solid #333; width: 220px; padding-top: 8px;">
+                <div style="font-size: 13px; font-weight: bold;">Despachado por (Aserradero)</div>
+            </div>
+            <div style="text-align: center; border-top: 1px solid #333; width: 220px; padding-top: 8px;">
+                <div style="font-size: 13px; font-weight: bold;">Recibí Conforme (Cliente / Chofer)</div>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>

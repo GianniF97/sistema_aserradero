@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Remitos Internos - Aserradero</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 30px; background-color: #f8f9fa;">
+    <div style="max-width: 1100px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        
+        <header style="border-bottom: 2px solid #2c3e50; padding-bottom: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h2 style="color: #2c3e50; margin: 0;">Remitos Internos de Salida</h2>
+                <div style="font-size: 13px; color: #7f8c8d; margin-top: 4px;">Comprobantes de entrega y despacho de madera aserrada.</div>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <a href="/remitos/nuevo" style="background: #27ae60; color: white; padding: 7px 14px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 13px;">+ Nuevo Remito de Salida</a>
+                <a href="/" style="background: #e2e8f0; color: #2c3e50; padding: 7px 14px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 13px;">← Volver al Inicio</a>
+            </div>
+        </header>
+
+        {% with mensajes = get_flashed_messages(with_categories=true) %}
+            {% if mensajes %}
+                {% for categoria, mensaje in mensajes %}
+                    <div style="padding: 10px; margin-bottom: 15px; border-radius: 4px; background-color: #d4edda; color: #155724;">
+                        <strong>{{ mensaje }}</strong>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <table border="1" cellpadding="9" cellspacing="0" style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+            <thead>
+                <tr style="background-color: #2c3e50; color: white;">
+                    <th>Nº Remito</th>
+                    <th>Fecha</th>
+                    <th>Cliente / Destino</th>
+                    <th>Transporte / Chofer</th>
+                    <th>Patente</th>
+                    <th style="text-align: center;">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in remitos %}
+                <tr>
+                    <td><strong>{{ r['numero_remito'] }}</strong></td>
+                    <td>{{ r['fecha'] }}</td>
+                    <td><strong>{{ r['cliente'] }}</strong></td>
+                    <td>{{ r['chofer_transporte'] or '-' }}</td>
+                    <td>{{ r['patente_vehiculo'] or '-' }}</td>
+                    <td style="text-align: center;">
+                        <a href="/remitos/{{ r['id_remito'] }}" style="background: #2980b9; color: white; padding: 5px 12px; border-radius: 4px; text-decoration: none; font-size: 12px; font-weight: bold;">
+                            Ver / Imprimir 🖨️
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" style="text-align: center; color: #7f8c8d; padding: 25px;">No se han emitido remitos aún.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

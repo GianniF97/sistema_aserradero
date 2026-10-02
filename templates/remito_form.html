@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuevo Remito Interno - Aserradero</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 30px; background-color: #f8f9fa;">
+    <div style="max-width: 800px; margin: 0 auto; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        
+        <header style="border-bottom: 2px solid #2c3e50; padding-bottom: 12px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+            <h2 style="color: #2c3e50; margin: 0;">Emitir Remito Interno de Entrega</h2>
+            <a href="/remitos" style="background: #e2e8f0; color: #2c3e50; padding: 6px 14px; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 13px;">← Volver</a>
+        </header>
+
+        <form action="{{ url_for('nuevo_remito') }}" method="POST" style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div>
+                    <label style="font-weight: bold; display: block; margin-bottom: 4px;">Cliente Receptor *</label>
+                    <select name="id_cliente" required style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+                        <option value="" disabled selected>-- Seleccionar Cliente --</option>
+                        {% for c in clientes %}
+                            <option value="{{ c['id_cliente'] }}">{{ c['nombre'] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label style="font-weight: bold; display: block; margin-bottom: 4px;">Chofer / Transporte</label>
+                    <input type="text" name="chofer_transporte" placeholder="Ej: Juan Pérez" style="width: 100%; padding: 8px; box-sizing: border-box; border-radius: 4px; border: 1px solid #ccc;">
+                </div>
+            </div>
+
+            <div style="width: 50%;">
+                <label style="font-weight: bold; display: block; margin-bottom: 4px;">Patente del Vehículo</label>
+                <input type="text" name="patente_vehiculo" placeholder="Ej: AF 123 CD" style="width: 100%; padding: 8px; box-sizing: border-box; border-radius: 4px; border: 1px solid #ccc;">
+            </div>
+
+            <h3 style="border-bottom: 1px solid #eee; padding-bottom: 8px; margin-top: 15px; color: #2c3e50;">Productos a Despachar (Stock actual)</h3>
+
+            {% if productos %}
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    {% for p in productos %}
+                    <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 15px; align-items: center; background: #fafafa; padding: 10px; border-radius: 4px;">
+                        <div>
+                            <strong>{{ p['nombre'] }}</strong>
+                            <div style="font-size: 12px; color: #7f8c8d;">Disponible en depósito: {{ p['stock_actual'] }} piezas</div>
+                            <input type="hidden" name="id_producto[]" value="{{ p['id_producto'] }}">
+                        </div>
+                        <div>
+                            <input type="number" name="cantidad[]" min="0" max="{{ p['stock_actual'] }}" step="1" value="0" style="width: 100%; padding: 8px; box-sizing: border-box; text-align: right;" placeholder="0">
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div style="padding: 15px; background: #fff3cd; color: #856404; border-radius: 4px;">
+                    No hay productos terminados con stock disponible en este momento. Procesá cortes primero.
+                </div>
+            {% endif %}
+
+            <button type="submit" style="background-color: #27ae60; color: white; border: none; padding: 12px; border-radius: 4px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 10px;">
+                Generar Remito y Descontar Stock
+            </button>
+        </form>
+    </div>
+</body>
+</html>
