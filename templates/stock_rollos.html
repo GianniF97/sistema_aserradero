@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Inventario en Playón{% endblock %}
+
+{% block page_title %}Inventario de Rollos en Playón{% endblock %}
+{% block page_subtitle %}Acopio de materia prima recibido pendiente de corte en sierra{% endblock %}
+
+{% block header_actions %}
+    <a href="/ingreso-rollos" class="btn btn-primary">
+        Nuevo Ingreso de Lote
+    </a>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Lotes de Madera en Acopio</h3>
+        <span class="badge">{{ rollos|length }} lotes</span>
+    </div>
+    
+    <div class="table-responsive" style="border: none;">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th style="width: 80px;">Lote</th>
+                    <th>Proveedor</th>
+                    <th>Especie</th>
+                    <th style="text-align: right;">Cantidad</th>
+                    <th style="text-align: right;">Diámetro Prom.</th>
+                    <th style="text-align: right;">Largo Prom.</th>
+                    <th style="text-align: right;">Volumen Total</th>
+                    <th>Fecha Ingreso</th>
+                    <th>Estado</th>
+                    <th style="text-align: center; width: 140px;">Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in rollos %}
+                <tr>
+                    <td>
+                        <span class="table-cell-mono">#{{ r['id_lote'] }}</span>
+                    </td>
+                    <td><strong>{{ r['proveedor'] }}</strong></td>
+                    <td>{{ r['especie'] }}</td>
+                    <td style="text-align: right;" class="table-cell-mono">{{ r['cantidad_rollos'] }} rollos</td>
+                    <td style="text-align: right;" class="table-cell-mono">{{ r['diametro_promedio_cm'] }} cm</td>
+                    <td style="text-align: right;" class="table-cell-mono">{{ r['largo_promedio_m'] }} m</td>
+                    <td style="text-align: right;" class="table-cell-mono">
+                        <strong>{{ r['volumen_total_m3'] }} m³</strong>
+                    </td>
+                    <td style="color: var(--color-text-muted);">{{ r['fecha_ingreso'] }}</td>
+                    <td>
+                        <span class="badge">En Playón</span>
+                    </td>
+                    <td style="text-align: center;">
+                        <a href="{{ url_for('crear_orden_corte', id_lote=r['id_lote']) }}" class="btn btn-sm btn-primary">
+                            Planificar Corte
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="10" class="table-empty-state">
+                        <p style="margin-bottom: 0.75rem;">No hay lotes de rollos en playón actualmente.</p>
+                        <a href="/ingreso-rollos" class="btn btn-sm btn-secondary">Registrar ingreso de camión</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

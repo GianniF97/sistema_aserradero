@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Ingreso de Rollos{% endblock %}
+
+{% block page_title %}Ingreso de Rollos{% endblock %}
+{% block page_subtitle %}Recepción de camiones y cubicación geométrica de madera en playón{% endblock %}
+
+{% block header_actions %}
+    <a href="/stock-rollos" class="btn btn-secondary">
+        Volver a Stock
+    </a>
+{% endblock %}
+
+{% block content %}
+<div style="max-width: 640px; margin: 0 auto;">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Datos del Lote Entrante</h3>
+        </div>
+        <div class="card-body">
+            <form action="{{ url_for('ingresar_rollos') }}" method="POST">
+                
+                <div class="form-group">
+                    <label for="id_proveedor" class="form-label">Proveedor Forestal</label>
+                    <select name="id_proveedor" id="id_proveedor" class="form-select" required>
+                        <option value="" disabled selected>Seleccione un proveedor</option>
+                        {% for p in proveedores %}
+                            <option value="{{ p['id_proveedor'] }}">{{ p['nombre'] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="especie" class="form-label">Especie de Madera</label>
+                    <select name="especie" id="especie" class="form-select" required>
+                        <option value="Pino Taeda">Pino Taeda</option>
+                        <option value="Pino Elliottis">Pino Elliottis</option>
+                        <option value="Eucalipto Grandis">Eucalipto Grandis</option>
+                        <option value="Araucaria">Araucaria</option>
+                    </select>
+                </div>
+
+                <div class="form-row-3">
+                    <div class="form-group">
+                        <label for="cantidad_rollos" class="form-label">Cantidad (Rollos)</label>
+                        <input type="number" name="cantidad_rollos" id="cantidad_rollos" class="form-control" min="1" step="1" required placeholder="Ej: 50">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="diametro" class="form-label">Diámetro Prom. (cm)</label>
+                        <input type="number" name="diametro" id="diametro" class="form-control" min="1" step="0.1" required placeholder="Ej: 28.5">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="largo" class="form-label">Largo Prom. (m)</label>
+                        <input type="number" name="largo" id="largo" class="form-control" min="0.1" step="0.05" required placeholder="Ej: 3.5">
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--color-border-light);">
+                    <a href="/stock-rollos" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">
+                        Guardar Ingreso de Lote
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,10 @@
+
+@"
+__pycache__/
+*.pyc
+.env
+venv/
+env/
+instance/
+aserradero.db
+"@ | Set-Content .gitignore

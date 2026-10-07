@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Gestión de Planta{% endblock %} - Aserradero</title>
+    <!-- Tipografía Google Fonts Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- BARRA DE NAVEGACIÓN PRINCIPAL -->
+    <header class="app-navbar">
+        <div class="navbar-container">
+            <a href="/" class="brand-section">
+                <div class="brand-symbol">A</div>
+                <div class="brand-title-wrap">
+                    <span class="brand-name">Aserradero</span>
+                    <span class="brand-subtitle">Control de Planta</span>
+                </div>
+            </a>
+
+            <nav>
+                <ul class="nav-links">
+                    <li>
+                        <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">
+                            Inicio
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/stock-rollos" class="nav-link {% if request.path == '/stock-rollos' %}active{% endif %}">
+                            Stock en Playón
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/ingreso-rollos" class="nav-link {% if request.path == '/ingreso-rollos' %}active{% endif %}">
+                            Ingreso Rollos
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/ordenes-corte" class="nav-link {% if request.path == '/ordenes-corte' %}active{% endif %}">
+                            Órdenes de Sierra
+                        </a>
+                    </li>
+
+                    {% if session.get('es_dueno') or es_dueno %}
+                        <li class="nav-divider"></li>
+                        <li>
+                            <a href="/crear-orden-corte" class="nav-link {% if request.path == '/crear-orden-corte' %}active{% endif %}">
+                                Planificar Corte
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/remitos" class="nav-link {% if request.path.startswith('/remitos') %}active{% endif %}">
+                                Remitos
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/productos" class="nav-link {% if request.path == '/productos' %}active{% endif %}">
+                                Catálogo
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/clientes" class="nav-link {% if request.path == '/clientes' %}active{% endif %}">
+                                Clientes
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/proveedores" class="nav-link {% if request.path == '/proveedores' %}active{% endif %}">
+                                Proveedores
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+
+            <div class="user-status-section">
+                {% if session.get('es_dueno') or es_dueno %}
+                    <span class="role-badge admin">Administrador</span>
+                    <a href="/logout-dueno" class="btn btn-sm btn-secondary">Cerrar Sesión</a>
+                {% else %}
+                    <span class="role-badge operario">Operario</span>
+                    <a href="/login-dueno" class="btn btn-sm btn-secondary">Acceso Dueño</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- ÁREA DE CONTENIDO -->
+    <main class="main-content">
+        {% block main_header %}
+        <div class="page-header">
+            <div class="page-title-group">
+                <h1>{% block page_title %}{% endblock %}</h1>
+                <p>{% block page_subtitle %}{% endblock %}</p>
+            </div>
+            <div class="header-actions">
+                {% block header_actions %}{% endblock %}
+            </div>
+        </div>
+        {% endblock %}
+
+        {% with mensajes = get_flashed_messages(with_categories=true) %}
+            {% if mensajes %}
+                <div class="flash-container">
+                    {% for categoria, mensaje in mensajes %}
+                        <div class="alert alert-{% if categoria == 'error' %}danger{% elif categoria == 'success' %}success{% elif categoria == 'warning' %}warning{% else %}info{% endif %}">
+                            {{ mensaje }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="app-footer">
+        Sistema de Gestión y Trazabilidad de Madera Aserrada &copy; {{ now.year if now else '2026' }}. Planta Industrial.
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
